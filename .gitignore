@@ -1,0 +1,15 @@
+node_modules/
+dist/
+.aspire/
+.modules/
+bin/
+obj/
+*.tsbuildinfo
+.validation/
+.azure/
+.env
+.env.*
+!.env.example
+*.user
+*.suo
+.DS_Store
