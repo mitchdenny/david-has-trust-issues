@@ -12,9 +12,10 @@ With the custom Aspire CLI that supports Git template repositories:
 aspire new --template-repository git@github.com:mitchdenny/david-has-trust-issues.git
 ```
 
-The custom CLI asks for the project name and injects its active `AspireVersion` and
-raw identity-channel `AspireNuGetSource` when these well-known parameters are
-declared. The repository contains exactly one template.
+The custom CLI asks for the project name and injects its active `AspireVersion`.
+Special parameters are opt-in: this template does not declare `AspireNuGetSource`,
+so the CLI skips that injection. No repository-level `NuGet.config` is needed or
+generated. The repository contains exactly one template.
 
 SSH Git URLs require a GitHub SSH key even for this public repository. HTTPS avoids
 that requirement:
@@ -39,21 +40,17 @@ dotnet new install ./david-has-trust-issues
 dotnet new david-has-trust-issues --name Contoso.Inventory --output ./Contoso.Inventory
 ```
 
-Both injected parameters are optional for stock `dotnet new`. Defaults are
-`17.0.0-preview.1.26520.10` and the public Aspire daily feed
-`https://pkgs.dev.azure.com/dnceng/public/_packaging/aspire-dev/nuget/v3/index.json`.
-To use a different matching SDK/channel:
+`AspireVersion` is optional for stock `dotnet new` and defaults to
+`17.0.0-preview.1.26520.10`. To use a different compatible SDK version:
 
 ```bash
 dotnet new david-has-trust-issues --name MyApp --output ./MyApp \
-  --AspireVersion YOUR_ASPIRE_VERSION \
-  --AspireNuGetSource YOUR_FEED_URL_OR_LOCAL_DIRECTORY
+  --AspireVersion YOUR_ASPIRE_VERSION
 ```
 
-Pass the feed as a raw URL/path, not XML-escaped text. The template escapes XML
-attributes (including quotes), keeps NuGet source/mapping keys static, and replaces
-both SDK and hosting package versions. The scaffold's `daily` channel is preserved;
-select a compatible Aspire CLI and feed for any overridden version.
+The version replaces both the SDK and hosting package pins in `aspire.config.json`.
+The scaffold's `daily` channel is preserved; select a compatible Aspire CLI and
+channel for any overridden version. Application dependencies are managed by npm.
 
 The AppHost, `api`, and `frontend` paths are deliberately generic and do not require
 project-derived filename renames. Project-derived npm names are lowercased and
@@ -126,9 +123,10 @@ python3 tests/generation.py
 ```
 
 This uses an isolated template hive under ignored `.validation/` and generates both
-required names, plus version/feed override cases. It checks npm/lock consistency,
-generic paths/references, XML round-tripping, version replacement, and exclusions.
-Each run recreates its four generated application folders under `.validation/`;
+required names, plus a version override case. It checks npm/lock consistency,
+generic paths/references, version replacement, exclusions, and absence of NuGet
+configuration.
+Each run recreates its three generated application folders under `.validation/`;
 do not keep work in those disposable folders.
 It does not exercise the custom CLI's repository transport; that CLI is not included
 in this repository.

@@ -19,18 +19,6 @@
       "description": "Aspire SDK and hosting integration version; supplied by the custom Aspire CLI.",
       "replaces": "17.0.0-preview.1.26520.10"
     },
-    "AspireNuGetSource": {
-      "type": "parameter",
-      "datatype": "string",
-      "defaultValue": "https://pkgs.dev.azure.com/dnceng/public/_packaging/aspire-dev/nuget/v3/index.json",
-      "description": "Raw Aspire NuGet feed URL or local directory; supplied by the custom Aspire CLI."
-    },
-    "AspireNuGetSourceXml": {
-      "type": "derived",
-      "valueSource": "AspireNuGetSource",
-      "valueTransform": "xmlAttribute",
-      "replaces": "https://pkgs.dev.azure.com/dnceng/public/_packaging/aspire-dev/nuget/v3/index.json"
-    },
     "NpmName": {
       "type": "derived",
       "valueSource": "name",
@@ -52,15 +40,6 @@
     "npmName": {
       "identifier": "chain",
       "steps": ["lowerCase", "npmCharacters", "npmStart"]
-    },
-    "encodeQuotes": {
-      "identifier": "replace",
-      "pattern": "\"",
-      "replacement": "&quot;"
-    },
-    "xmlAttribute": {
-      "identifier": "chain",
-      "steps": ["xmlEncode", "encodeQuotes"]
     }
   },
   "sources": [
